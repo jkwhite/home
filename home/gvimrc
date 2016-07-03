@@ -1,0 +1,15 @@
+set guioptions-=R
+set guioptions-=r
+set guioptions-=L
+set guioptions-=l
+set guifont=Monaco:h18
+set transparency=40
+set hlsearch
+
+augroup CursorLine
+  au!
+  au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+  au WinLeave * setlocal nocursorline
+augroup END
+
+colors approaching_yuggoth

@@ -1,0 +1,7 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =5
+let g:netrw_dirhist_1='/Users/jkwhite/workspace/datapath2/src/DetailpageFeatureQueries/src'
+let g:netrw_dirhist_2='/Users/jkwhite/workspace/datapath2/src/DetailpageFeatureQueries/src/detailpage'
+let g:netrw_dirhist_3='/Users/jkwhite/workspace/datapath2/src/DetailpageFeatureQueries/src/detailpage/features'
+let g:netrw_dirhist_4='/Users/jkwhite/workspace/datapath2/src/DetailpageFeatureQueries/src/detailpage/features/bullets'
+let g:netrw_dirhist_5='/Users/jkwhite/src/tonegodgui/etc/tonegod.gui.tests/nbproject'

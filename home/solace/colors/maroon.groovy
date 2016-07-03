@@ -1,0 +1,20 @@
+$c.colors['maroon'] = [
+    '*':[
+        background:'#331211FF',
+        foreground:'white',
+        caretColor:'green'
+    ],
+    '*.prompt':[
+        background:'#442322FF',
+        foreground:'yellow',
+    ],
+    '*.input':[
+        background:'#442322FF',
+        foreground:'white',
+        caretColor:'green'
+    ],
+    '*.choice':[
+        background:'#664544FF',
+        foreground:'yellow'
+    ]
+]

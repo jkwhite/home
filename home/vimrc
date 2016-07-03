@@ -1,0 +1,227 @@
+" An example for a vimrc file.
+"
+" Maintainer:   Bram Moolenaar <Bram@vim.org>
+" Last change:  2000 Jan 06
+"
+" To use it, copy it to
+"     for Unix and OS/2:  ~/.vimrc
+"             for Amiga:  s:.vimrc
+"  for MS-DOS and Win32:  $VIM\_vimrc
+"               for VMS:  sys$login:.vimrc
+
+" Use Vim settings, rather then Vi settings (much better!).
+" This must be first, because it changes other options as a side effect.
+set nocompatible
+
+set autoindent          " (ai) take indent for new line from previous line
+set backspace=2         " (bs) allow backspacing over everything in insert mode
+set backup              " (bk) keep a backup file
+set backupdir=~/tmp,.   " (bdir) list of directories for the backup file
+set backupext=~         " (bex) extention used for the backup file
+set viminfo='20,\"50    " (vi) read/write a .viminfo file, don't store more
+                        " than 50 lines of registers
+set history=50          " (hi) keep 50 lines of command line history
+set ruler               " (ru) show the cursor position all the time
+
+" My favorite options:
+set complete=.,b,u,i    " (cpt) complete mode insertion search for pattern in
+                        " the current buffer, then in other loaded buffer,
+                        " then unloaded buffer, then included files
+set nowrap              " do not wrap lines
+set incsearch           " (is)  Highlight match while typing search pattern
+set noinfercase         " (inf) Adjust case of match for keyword completion
+set noinsertmode        " (im)  Start the edit of a file in Insert mode
+"set joinspaces          " (js)  Two spaces after a period with a join command
+set more
+set secure
+set smartindent
+"set shiftwidth=2    " Controversed :(
+set shiftwidth=4
+set showcmd
+set showmode
+set tabstop=4
+"set indentexpr=cindent(\".\")-4
+set expandtab
+set warn
+set hlsearch
+
+
+
+
+
+
+" For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
+" let &guioptions = substitute(&guioptions, "t", "", "g")
+
+" Don't use Ex mode, use Q for formatting
+map Q gq
+
+" work around a bug in some key-maping
+" if your 'End' key doesn't work, uncomment these next two lines
+" imap ^[[4~ ^[A
+" nmap ^[[4~ $
+
+" Make p in Visual mode replace the selected text with the "" register.
+vnoremap p <Esc>:let current_reg = @"<CR>gvdi<C-R>=current_reg<CR><Esc>
+
+" Switch syntax highlighting on, when the terminal has colors
+" Also switch off highlighting the last used search pattern since it confuse
+" users (most notably Chmouel :)
+if &t_Co > 2 || has("gui_running")
+  syntax on
+  set nohlsearch
+endif
+
+" Only do this part when compiled with support for autocommands.
+if has("autocmd")
+
+ " In text files, always limit the width of text to 78 characters
+ autocmd BufRead *.txt set tw=78 
+
+ augroup cprog
+  " Remove all cprog autocommands
+  au!
+
+  " When starting to edit a file:
+  "   For C and C++ files set formatting of comments and set C-indenting on.
+  "   For other files switch it off.
+  "   Don't change the order, it's important that the line with * comes first.
+  autocmd FileType *      set formatoptions=tcql nocindent comments&
+  autocmd FileType c,cpp,java  set formatoptions=croql cindent comments=sr:/*,mb:*,el:*/,://
+ augroup END
+
+ augroup gzip
+  " Remove all gzip autocommands
+  au!
+
+  " Enable editing of gzipped files
+  "   read: set binary mode before reading the file
+  "   uncompress text in buffer after reading
+  "  write: compress file after writing
+  " append: uncompress file, append, compress file
+  autocmd BufReadPre,FileReadPre  *.gz set bin
+  autocmd BufReadPost,FileReadPost  *.gz let ch_save = &ch|set ch=2
+  autocmd BufReadPost,FileReadPost  *.gz '[,']!gunzip
+  autocmd BufReadPost,FileReadPost  *.gz set nobin
+  autocmd BufReadPost,FileReadPost  *.gz let &ch = ch_save|unlet ch_save
+  autocmd BufReadPost,FileReadPost  *.gz execute ":doautocmd BufReadPost " . expand("%:r")
+
+  autocmd BufWritePost,FileWritePost  *.gz !mv <afile> <afile>:r
+  autocmd BufWritePost,FileWritePost  *.gz !gzip <afile>:r
+
+  autocmd FileAppendPre     *.gz !gunzip <afile>
+  autocmd FileAppendPre     *.gz !mv <afile>:r <afile>
+  autocmd FileAppendPost    *.gz !mv <afile> <afile>:r
+  autocmd FileAppendPost    *.gz !gzip <afile>:r
+ augroup END
+ augroup bz2
+  " Remove all bz2 autocommands
+  au!
+
+  " Enable editing of bzipped files
+  "   read: set binary mode before reading the file
+  "   uncompress text in buffer after reading
+  "  write: compress file after writing
+  " append: uncompress file, append, compress file
+  autocmd BufReadPre,FileReadPre  *.bz2 set bin
+  autocmd BufReadPost,FileReadPost  *.bz2 let ch_save = &ch|set ch=2
+  autocmd BufReadPost,FileReadPost  *.bz2 '[,']!bunzip2
+  autocmd BufReadPost,FileReadPost  *.bz2 set nobin
+  autocmd BufReadPost,FileReadPost  *.bz2 let &ch = ch_save|unlet ch_save
+  autocmd BufReadPost,FileReadPost  *.bz2 execute ":doautocmd BufReadPost " . expand("%:r")
+  au BufRead,BufNewFile *.wiki setfiletype wikipedia
+
+  autocmd BufWritePost,FileWritePost  *.bz2 !mv <afile> <afile>:r
+  autocmd BufWritePost,FileWritePost  *.bz2 !bzip2 <afile>:r
+
+  autocmd FileAppendPre     *.bz2 !bunzip2 <afile>
+  autocmd FileAppendPre     *.bz2 !mv <afile>:r <afile>
+  autocmd FileAppendPost    *.bz2 !mv <afile> <afile>:r
+  autocmd FileAppendPost    *.bz2 !bzip2 <afile>:r
+ augroup END
+
+ " This is disabled, because it changes the jumplist.  Can't use CTRL-O to go
+ " back to positions in previous files more than once.
+ if 1
+  " When editing a file, always jump to the last cursor position.
+  " This must be after the uncompress commands.
+   autocmd BufReadPost * if line("'\"") && line("'\"") <= line("$") | exe "normal `\"" | endif
+ endif
+
+endif " has("autocmd")
+
+" source ~/etc/diffwin.vim
+" source ~/.vim/custom.vim
+" source ~/vim/plugin/ccase.vim
+" source ~/vim/jad.vim
+" source ~/.vim/javadefs.vim
+" source ~/.vim/JavaImp.vim
+" source ~/.vim/opsplorer.vim
+" source ~/.vim/multivim.vim
+" source ~/.vim/custom.vim
+
+"source ~/.vim/workspace.vim
+
+set textwidth=0
+set autochdir
+
+"autocmd FileType java let b:jcommenter_class_author='jkw'
+"autocmd FileType java let b:jcommenter_file_author='jkw'
+"autocmd FileType java source ~/.vim/plugin/jcommenter.vim
+"autocmd BufRead *.java setlocal omnifunc=javacomplete#Complete
+"autocmd BufRead *.java setlocal cfu=VjdeCompletionFun
+" autocmd FileType java map <F9> :call JCommentWriter()<CR>
+
+"autocmd FileType java source ~/.vim/plugin/javabean.vim
+"autocmd FileType java map <F9> :Fixproperty<CR>
+
+let mapleader = " "
+" toggle line wrap
+map <silent> <Leader>w :set wrap!<CR>
+
+" bufexplorer
+map <silent> <C-i> :BufExplorer<CR>
+
+" tags
+map <silent> <C-l> :TlistToggle<CR>
+
+map <silent> <Leader>, :WSources<CR>/\c^
+map <silent> <Leader>e :e `fj <cword>`<CR>
+
+"inoremap <C-Space> <C-X><C-U>
+set completeopt=longest,menuone
+"inoremap <expr> <cr> pumvisible() ? "\<c-p>" : "\<c-g>u\<cr>"
+"inoremap <expr> ( pumvisible() ? "\<c-p>" : "\<c-g>u\("
+
+"inoremap <expr> <c-n> pumvisible() ? "\<lt>c-n>" : "\<lt>c-n>\<lt>c-r>=pumvisible() ? \"\\<lt>down\" : \"\"\<lt>cr>"
+"inoremap <expr> <m-;> pumvisible() ? "\<lt>c-n>" : "\<lt>c-x>\<lt>c-o>\<lt>c-n>\<lt>c-p>\<lt>c-r>=pumvisible() ? \"\\<lt>down>\" : \"\"\<lt>cr>"
+
+iabbrev pub public
+iabbrev priv private
+iabbrev prot protected
+iabbrev cls class
+iabbrev inter interface
+iabbrev pst e.printStackTrace();
+iabbrev ths throws
+iabbrev stt static
+iabbrev dbg System.err.println( 
+iabbrev th throw new
+iabbrev lg Logger
+
+"set path=.,$DW_HOME/platform/src/**,$DW_HOME/dssui/dssApp/src/**,$DW_HOME/libDWPDatanetServiceServerImpl/src/**,$DW_HOME/scripts/**,$DW_HOME/tools/src/**,/usr/java/latest/**
+"set path=.,$WROOT/shared/interface/WMACore/wmaUtil/src/**,$WROOT/shared/interface/WMAEventCore/wmaEventCore/src/**,$WROOT/appgroup/website-metrics-event-driven/apps/WMAAppEventWebmon/wmaAppEventWebmon/src/**,/usr/java/latest/**
+"set path=$WROOT/src/**
+let g:vjde_show_preview=1
+"let g:vjde_cfu_java_dot=1
+
+let g:cppcomplete_tagfile="/tmp/tags.java"
+let g:statline_trailing_space = 0
+
+autocmd BufRead *.java set include=^#\s*import 
+autocmd BufRead *.java set includeexpr=substitute(v:fname,'\\.','/','g') 
+autocmd BufRead *.java set suffixesadd=.java
+
+call pathogen#infect()
+colors desert
+
+"set statusline+=\ %{g:cws}

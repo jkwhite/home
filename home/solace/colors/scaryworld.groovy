@@ -1,0 +1,20 @@
+$c.colors['scaryworld'] = [
+    '*':[
+        background:'#0e1f46FF',
+        foreground:'white',
+        caretColor:'orange'
+    ],
+    '*.prompt':[
+        background:'#41a5a5FF',
+        foreground:'white',
+    ],
+    '*.input':[
+        background:'#41a5a5FF',
+        foreground:'white',
+        caretColor:'orange'
+    ],
+    '*.choice':[
+        background:'#664544FF',
+        foreground:'yellow'
+    ]
+]

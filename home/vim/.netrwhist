@@ -1,0 +1,8 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =6
+let g:netrw_dirhist_1='/Users/jkw/code/git/caspar/src/main/java/org/excelsi'
+let g:netrw_dirhist_2='/Users/jkw/code/git/caspar/src/main/java/org/excelsi/caspar'
+let g:netrw_dirhist_3='/Users/jkw/code/git/nausicaa/src/main/org/excelsi/nausicaa/ca'
+let g:netrw_dirhist_4='/Users/jkw/code'
+let g:netrw_dirhist_5='/Users/jkw/code/local'
+let g:netrw_dirhist_6='/Users/jkw/code/local/excelsiorg'
