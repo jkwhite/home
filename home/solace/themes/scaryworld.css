@@ -1,0 +1,12 @@
+.console {
+    -fx-font: normal bold 18pt "Monaco";
+    -fx-background-color: #1f252b;
+}
+
+.cursor {
+    -fx-background-color: #5f98ae;
+}
+
+.error {
+    -fx-text-fill: #e19035;
+}
